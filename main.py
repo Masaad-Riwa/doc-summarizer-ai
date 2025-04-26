@@ -22,32 +22,36 @@ def extract_text_from_pdf(uploaded_file):
             text += page.get_text()
     return text
 
+
 # App UI
 st.title("📄 PDF Assistant with Gemini")
 
 uploaded_file = st.file_uploader("Upload your PDF", type=["pdf"])
 
 if uploaded_file:
-    st.success("PDF uploaded successfully!")
-    text = extract_text_from_pdf(uploaded_file)
-    st.write("📃 Extracted Text Sample:")
-    st.text(text[:1000])  # show a snippet
+    if uploaded_file.size > 10 * 1024 * 1024:  # 10 MB in bytes
+        st.error("The uploaded file is too large. Please upload a file smaller than 10 MB.")
+    else:
+        st.success("PDF uploaded successfully!")
+        text = extract_text_from_pdf(uploaded_file)
+        st.write("📃 Extracted Text Sample:")
+        st.text(text[:1000])  # show a snippet
 
-    task = st.selectbox("What would you like Gemini to do?", ["Summarize", "Extract key points", "Answer questions"])
+        task = st.selectbox("What would you like Gemini to do?", ["Summarize", "Extract key points", "Answer questions"])
 
-    if task == "Answer questions":
-        question = st.text_input("Ask a question about the document:")
-        if st.button("Ask"):
-            response = model.generate_content(f"Based on the following document:\n{text}\n\nAnswer the question:\n{question}")
-            st.markdown("**💬 Answer:**")
+        if task == "Answer questions":
+            question = st.text_input("Ask a question about the document:")
+            if st.button("Ask"):
+                response = model.generate_content(f"Based on the following document:\n{text}\n\nAnswer the question:\n{question}")
+                st.markdown("**💬 Answer:**")
+                st.write(response.text)
+
+        elif st.button("Run"):
+            prompt = {
+                "Summarize": f"Summarize the following document:\n\n{text}",
+                "Extract key points": f"List the key points from this document:\n\n{text}"
+            }[task]
+
+            response = model.generate_content(prompt)
+            st.markdown("**🧠 Gemini Response:**")
             st.write(response.text)
-
-    elif st.button("Run"):
-        prompt = {
-            "Summarize": f"Summarize the following document:\n\n{text}",
-            "Extract key points": f"List the key points from this document:\n\n{text}"
-        }[task]
-
-        response = model.generate_content(prompt)
-        st.markdown("**🧠 Gemini Response:**")
-        st.write(response.text)

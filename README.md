@@ -7,7 +7,7 @@ This app allows users to upload a PDF, extract the text, and use Gemini to summa
 
 
 ## 🚀 Features
-- Upload any PDF
+- Upload a PDF
 - Summarize its contents
 - Extract key points
 - Ask custom questions about the document
@@ -17,10 +17,11 @@ This app allows users to upload a PDF, extract the text, and use Gemini to summa
 ## 🛠️ Installation
 
 1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/doc-summarizer.git
-   cd your-repo-name
-   ``` 
+
+```bash
+git clone https://github.com/your-username/doc-summarizer.git
+cd your-repo-name
+``` 
 
 2. **Install dependencies**
 
